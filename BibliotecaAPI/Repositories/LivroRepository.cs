@@ -1,48 +1,63 @@
+// [Repositories/LivroRepository.cs]
 using BibliotecaAPI.Models;
-using MongoDB.Driver;
+using BibliotecaAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaAPI.Repositories;
 
 public class LivroRepository : ILivroRepository
 {
-    private readonly IMongoCollection<Livro> _livros;
+    private readonly BibliotecaDbContext _context;
 
-    public LivroRepository(IMongoDatabase database)
+    public LivroRepository(BibliotecaDbContext context)
     {
-        _livros = database.GetCollection<Livro>("livros");
+        _context = context;
     }
 
     public async Task<IEnumerable<Livro>> GetAllAsync()
     {
-        return await _livros.Find(_ => true).ToListAsync();
+        return await _context.Livros.ToListAsync();
     }
 
-    public async Task<Livro?> GetByIdAsync(string id)
+    public async Task<Livro?> GetByIdAsync(int id)
     {
-        return await _livros.Find(l => l.Id == id).FirstOrDefaultAsync();
+        return await _context.Livros.FindAsync(id);
     }
 
     public async Task<Livro> CreateAsync(Livro livro)
     {
-        await _livros.InsertOneAsync(livro);
+        _context.Livros.Add(livro);
+        await _context.SaveChangesAsync();
         return livro;
     }
 
-    public async Task<Livro?> UpdateAsync(string id, Livro livro)
+    public async Task<Livro?> UpdateAsync(int id, Livro livro)
     {
-        var result = await _livros.ReplaceOneAsync(l => l.Id == id, livro);
-        return result.IsAcknowledged ? livro : null;
+        var existingLivro = await _context.Livros.FindAsync(id);
+        if (existingLivro == null) return null;
+
+        existingLivro.Titulo = livro.Titulo;
+        existingLivro.Autor = livro.Autor;
+        existingLivro.AnoPublicacao = livro.AnoPublicacao;
+        existingLivro.Genero = livro.Genero;
+        existingLivro.Disponivel = livro.Disponivel;
+
+        await _context.SaveChangesAsync();
+        return existingLivro;
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var result = await _livros.DeleteOneAsync(l => l.Id == id);
-        return result.IsAcknowledged && result.DeletedCount > 0;
+        var livro = await _context.Livros.FindAsync(id);
+        if (livro == null) return false;
+
+        _context.Livros.Remove(livro);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
-    public async Task<bool> ExistsAsync(string id)
+    public async Task<bool> ExistsAsync(int id)
     {
-        var count = await _livros.CountDocumentsAsync(l => l.Id == id);
-        return count > 0;
+        return await _context.Livros.AnyAsync(l => l.Id == id);
     }
 }

@@ -34,7 +34,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<UsuarioDto>> GetById(string id)
+    public async Task<ActionResult<UsuarioDto>> GetById(int id)
     {
         try
         {
@@ -70,7 +70,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<UsuarioDto>> Update(string id, [FromBody] UpdateUsuarioDto updateUsuarioDto)
+    public async Task<ActionResult<UsuarioDto>> Update(int id, [FromBody] UpdateUsuarioDto updateUsuarioDto)
     {
         try
         {
@@ -91,7 +91,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id)
+    public async Task<ActionResult> Delete(int id)
     {
         try
         {

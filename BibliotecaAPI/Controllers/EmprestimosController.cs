@@ -34,7 +34,7 @@ public class EmprestimosController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<EmprestimoDto>> GetById(string id)
+    public async Task<ActionResult<EmprestimoDto>> GetById(int id)
     {
         try
         {
@@ -80,7 +80,7 @@ public class EmprestimosController : ControllerBase
     }
 
     [HttpPut("{id}/devolver")]
-    public async Task<ActionResult<EmprestimoDto>> Devolver(string id, [FromBody] DevolverEmprestimoDto devolverEmprestimoDto)
+    public async Task<ActionResult<EmprestimoDto>> Devolver(int id, [FromBody] DevolverEmprestimoDto devolverEmprestimoDto)
     {
         try
         {
@@ -106,7 +106,7 @@ public class EmprestimosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id)
+    public async Task<ActionResult> Delete(int id)
     {
         try
         {

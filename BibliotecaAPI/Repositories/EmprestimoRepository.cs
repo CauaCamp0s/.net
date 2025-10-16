@@ -1,58 +1,87 @@
+// [Repositories/EmprestimoRepository.cs]
 using BibliotecaAPI.Models;
-using MongoDB.Driver;
+using BibliotecaAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaAPI.Repositories;
 
 public class EmprestimoRepository : IEmprestimoRepository
 {
-    private readonly IMongoCollection<Emprestimo> _emprestimos;
+    private readonly BibliotecaDbContext _context;
 
-    public EmprestimoRepository(IMongoDatabase database)
+    public EmprestimoRepository(BibliotecaDbContext context)
     {
-        _emprestimos = database.GetCollection<Emprestimo>("emprestimos");
+        _context = context;
     }
 
     public async Task<IEnumerable<Emprestimo>> GetAllAsync()
     {
-        return await _emprestimos.Find(_ => true).ToListAsync();
+        return await _context.Emprestimos
+            .Include(e => e.Livro)
+            .Include(e => e.Usuario)
+            .ToListAsync();
     }
 
-    public async Task<Emprestimo?> GetByIdAsync(string id)
+    public async Task<Emprestimo?> GetByIdAsync(int id)
     {
-        return await _emprestimos.Find(e => e.Id == id).FirstOrDefaultAsync();
+        return await _context.Emprestimos
+            .Include(e => e.Livro)
+            .Include(e => e.Usuario)
+            .FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public async Task<Emprestimo> CreateAsync(Emprestimo emprestimo)
     {
-        await _emprestimos.InsertOneAsync(emprestimo);
+        _context.Emprestimos.Add(emprestimo);
+        await _context.SaveChangesAsync();
         return emprestimo;
     }
 
-    public async Task<Emprestimo?> UpdateAsync(string id, Emprestimo emprestimo)
+    public async Task<Emprestimo?> UpdateAsync(int id, Emprestimo emprestimo)
     {
-        var result = await _emprestimos.ReplaceOneAsync(e => e.Id == id, emprestimo);
-        return result.IsAcknowledged ? emprestimo : null;
+        var existingEmprestimo = await _context.Emprestimos.FindAsync(id);
+        if (existingEmprestimo == null) return null;
+
+        existingEmprestimo.LivroId = emprestimo.LivroId;
+        existingEmprestimo.UsuarioId = emprestimo.UsuarioId;
+        existingEmprestimo.DataEmprestimo = emprestimo.DataEmprestimo;
+        existingEmprestimo.DataDevolucao = emprestimo.DataDevolucao;
+        existingEmprestimo.Devolvido = emprestimo.Devolvido;
+
+        await _context.SaveChangesAsync();
+        return existingEmprestimo;
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var result = await _emprestimos.DeleteOneAsync(e => e.Id == id);
-        return result.IsAcknowledged && result.DeletedCount > 0;
+        var emprestimo = await _context.Emprestimos.FindAsync(id);
+        if (emprestimo == null) return false;
+
+        _context.Emprestimos.Remove(emprestimo);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
-    public async Task<bool> ExistsAsync(string id)
+    public async Task<bool> ExistsAsync(int id)
     {
-        var count = await _emprestimos.CountDocumentsAsync(e => e.Id == id);
-        return count > 0;
+        return await _context.Emprestimos.AnyAsync(e => e.Id == id);
     }
 
-    public async Task<IEnumerable<Emprestimo>> GetByUsuarioIdAsync(string usuarioId)
+    public async Task<IEnumerable<Emprestimo>> GetByUsuarioIdAsync(int usuarioId)
     {
-        return await _emprestimos.Find(e => e.UsuarioId == usuarioId).ToListAsync();
+        return await _context.Emprestimos
+            .Include(e => e.Livro)
+            .Include(e => e.Usuario)
+            .Where(e => e.UsuarioId == usuarioId)
+            .ToListAsync();
     }
 
-    public async Task<IEnumerable<Emprestimo>> GetByLivroIdAsync(string livroId)
+    public async Task<IEnumerable<Emprestimo>> GetByLivroIdAsync(int livroId)
     {
-        return await _emprestimos.Find(e => e.LivroId == livroId).ToListAsync();
+        return await _context.Emprestimos
+            .Include(e => e.Livro)
+            .Include(e => e.Usuario)
+            .Where(e => e.LivroId == livroId)
+            .ToListAsync();
     }
 }

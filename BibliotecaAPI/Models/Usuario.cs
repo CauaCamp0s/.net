@@ -1,21 +1,23 @@
 // [Models/Usuario.cs]
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace BibliotecaAPI.Models;
 
 public class Usuario
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = string.Empty;
+    public int Id { get; set; }
 
-    [BsonElement("nome")]
+    [Required]
+    [MaxLength(100)]
     public string Nome { get; set; } = string.Empty;
 
-    [BsonElement("email")]
+    [Required]
+    [EmailAddress]
+    [MaxLength(100)]
     public string Email { get; set; } = string.Empty;
 
-    [BsonElement("telefone")]
+    [MaxLength(20)]
     public string Telefone { get; set; } = string.Empty;
+
+    public ICollection<Emprestimo> Emprestimos { get; set; } = new List<Emprestimo>();
 }

@@ -1,3 +1,4 @@
+// [Services/UsuarioService.cs]
 using BibliotecaAPI.DTOs;
 using BibliotecaAPI.Models;
 using BibliotecaAPI.Repositories;
@@ -22,7 +23,7 @@ public class UsuarioService : IUsuarioService
         return usuarios.Select(MapToDto);
     }
 
-    public async Task<UsuarioDto?> GetByIdAsync(string id)
+    public async Task<UsuarioDto?> GetByIdAsync(int id)
     {
         _logger.LogInformation("Buscando usuário com ID: {Id}", id);
         var usuario = await _usuarioRepository.GetByIdAsync(id);
@@ -46,7 +47,7 @@ public class UsuarioService : IUsuarioService
         return MapToDto(createdUsuario);
     }
 
-    public async Task<UsuarioDto?> UpdateAsync(string id, UpdateUsuarioDto updateUsuarioDto)
+    public async Task<UsuarioDto?> UpdateAsync(int id, UpdateUsuarioDto updateUsuarioDto)
     {
         _logger.LogInformation("Atualizando usuário com ID: {Id}", id);
         
@@ -74,7 +75,7 @@ public class UsuarioService : IUsuarioService
         return null;
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
         _logger.LogInformation("Deletando usuário com ID: {Id}", id);
         

@@ -1,3 +1,4 @@
+// [Repositories/ILivroRepository.cs]
 using BibliotecaAPI.Models;
 
 namespace BibliotecaAPI.Repositories;
@@ -5,9 +6,9 @@ namespace BibliotecaAPI.Repositories;
 public interface ILivroRepository
 {
     Task<IEnumerable<Livro>> GetAllAsync();
-    Task<Livro?> GetByIdAsync(string id);
+    Task<Livro?> GetByIdAsync(int id);
     Task<Livro> CreateAsync(Livro livro);
-    Task<Livro?> UpdateAsync(string id, Livro livro);
-    Task<bool> DeleteAsync(string id);
-    Task<bool> ExistsAsync(string id);
+    Task<Livro?> UpdateAsync(int id, Livro livro);
+    Task<bool> DeleteAsync(int id);
+    Task<bool> ExistsAsync(int id);
 }

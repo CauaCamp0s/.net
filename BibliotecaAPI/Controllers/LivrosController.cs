@@ -34,7 +34,7 @@ public class LivrosController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<LivroDto>> GetById(string id)
+    public async Task<ActionResult<LivroDto>> GetById(int id)
     {
         try
         {
@@ -70,7 +70,7 @@ public class LivrosController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<LivroDto>> Update(string id, [FromBody] UpdateLivroDto updateLivroDto)
+    public async Task<ActionResult<LivroDto>> Update(int id, [FromBody] UpdateLivroDto updateLivroDto)
     {
         try
         {
@@ -91,7 +91,7 @@ public class LivrosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id)
+    public async Task<ActionResult> Delete(int id)
     {
         try
         {

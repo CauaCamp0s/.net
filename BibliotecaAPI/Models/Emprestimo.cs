@@ -1,29 +1,24 @@
 // [Models/Emprestimo.cs]
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace BibliotecaAPI.Models;
 
 public class Emprestimo
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = string.Empty;
+    public int Id { get; set; }
 
-    [BsonElement("livroId")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string LivroId { get; set; } = string.Empty;
+    [Required]
+    public int LivroId { get; set; }
 
-    [BsonElement("usuarioId")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string UsuarioId { get; set; } = string.Empty;
+    [Required]
+    public int UsuarioId { get; set; }
 
-    [BsonElement("dataEmprestimo")]
     public DateTime DataEmprestimo { get; set; } = DateTime.Now;
 
-    [BsonElement("dataDevolucao")]
     public DateTime? DataDevolucao { get; set; }
 
-    [BsonElement("devolvido")]
     public bool Devolvido { get; set; } = false;
+
+    public Livro Livro { get; set; } = null!;
+    public Usuario Usuario { get; set; } = null!;
 }

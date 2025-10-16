@@ -1,12 +1,13 @@
+// [DTOs/EmprestimoDto.cs]
 using System.ComponentModel.DataAnnotations;
 
 namespace BibliotecaAPI.DTOs;
 
 public class EmprestimoDto
 {
-    public string Id { get; set; } = string.Empty;
-    public string LivroId { get; set; } = string.Empty;
-    public string UsuarioId { get; set; } = string.Empty;
+    public int Id { get; set; }
+    public int LivroId { get; set; }
+    public int UsuarioId { get; set; }
     public DateTime DataEmprestimo { get; set; }
     public DateTime? DataDevolucao { get; set; }
     public bool Devolvido { get; set; }
@@ -17,10 +18,10 @@ public class EmprestimoDto
 public class CreateEmprestimoDto
 {
     [Required(ErrorMessage = "LivroId é obrigatório")]
-    public string LivroId { get; set; } = string.Empty;
+    public int LivroId { get; set; }
 
     [Required(ErrorMessage = "UsuarioId é obrigatório")]
-    public string UsuarioId { get; set; } = string.Empty;
+    public int UsuarioId { get; set; }
 }
 
 public class DevolverEmprestimoDto

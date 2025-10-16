@@ -1,27 +1,26 @@
 // [Models/Livro.cs]
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace BibliotecaAPI.Models;
 
 public class Livro
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = string.Empty;
+    public int Id { get; set; }
 
-    [BsonElement("titulo")]
+    [Required]
+    [MaxLength(200)]
     public string Titulo { get; set; } = string.Empty;
 
-    [BsonElement("autor")]
+    [Required]
+    [MaxLength(100)]
     public string Autor { get; set; } = string.Empty;
 
-    [BsonElement("anoPublicacao")]
     public int AnoPublicacao { get; set; }
 
-    [BsonElement("genero")]
+    [MaxLength(50)]
     public string Genero { get; set; } = string.Empty;
 
-    [BsonElement("disponivel")]
     public bool Disponivel { get; set; } = true;
+
+    public ICollection<Emprestimo> Emprestimos { get; set; } = new List<Emprestimo>();
 }

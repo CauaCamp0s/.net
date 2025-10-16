@@ -1,3 +1,4 @@
+// [Services/LivroService.cs]
 using BibliotecaAPI.DTOs;
 using BibliotecaAPI.Models;
 using BibliotecaAPI.Repositories;
@@ -22,7 +23,7 @@ public class LivroService : ILivroService
         return livros.Select(MapToDto);
     }
 
-    public async Task<LivroDto?> GetByIdAsync(string id)
+    public async Task<LivroDto?> GetByIdAsync(int id)
     {
         _logger.LogInformation("Buscando livro com ID: {Id}", id);
         var livro = await _livroRepository.GetByIdAsync(id);
@@ -48,7 +49,7 @@ public class LivroService : ILivroService
         return MapToDto(createdLivro);
     }
 
-    public async Task<LivroDto?> UpdateAsync(string id, UpdateLivroDto updateLivroDto)
+    public async Task<LivroDto?> UpdateAsync(int id, UpdateLivroDto updateLivroDto)
     {
         _logger.LogInformation("Atualizando livro com ID: {Id}", id);
         
@@ -78,7 +79,7 @@ public class LivroService : ILivroService
         return null;
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
         _logger.LogInformation("Deletando livro com ID: {Id}", id);
         

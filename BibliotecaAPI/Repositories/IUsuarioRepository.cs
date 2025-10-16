@@ -1,3 +1,4 @@
+// [Repositories/IUsuarioRepository.cs]
 using BibliotecaAPI.Models;
 
 namespace BibliotecaAPI.Repositories;
@@ -5,9 +6,9 @@ namespace BibliotecaAPI.Repositories;
 public interface IUsuarioRepository
 {
     Task<IEnumerable<Usuario>> GetAllAsync();
-    Task<Usuario?> GetByIdAsync(string id);
+    Task<Usuario?> GetByIdAsync(int id);
     Task<Usuario> CreateAsync(Usuario usuario);
-    Task<Usuario?> UpdateAsync(string id, Usuario usuario);
-    Task<bool> DeleteAsync(string id);
-    Task<bool> ExistsAsync(string id);
+    Task<Usuario?> UpdateAsync(int id, Usuario usuario);
+    Task<bool> DeleteAsync(int id);
+    Task<bool> ExistsAsync(int id);
 }

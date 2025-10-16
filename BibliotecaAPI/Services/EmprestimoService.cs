@@ -1,3 +1,4 @@
+// [Services/EmprestimoService.cs]
 using BibliotecaAPI.DTOs;
 using BibliotecaAPI.Models;
 using BibliotecaAPI.Repositories;
@@ -27,20 +28,10 @@ public class EmprestimoService : IEmprestimoService
     {
         _logger.LogInformation("Buscando todos os empréstimos");
         var emprestimos = await _emprestimoRepository.GetAllAsync();
-        var emprestimoDtos = new List<EmprestimoDto>();
-
-        foreach (var emprestimo in emprestimos)
-        {
-            var livro = await _livroRepository.GetByIdAsync(emprestimo.LivroId);
-            var usuario = await _usuarioRepository.GetByIdAsync(emprestimo.UsuarioId);
-            
-            emprestimoDtos.Add(MapToDto(emprestimo, livro?.Titulo, usuario?.Nome));
-        }
-
-        return emprestimoDtos;
+        return emprestimos.Select(e => MapToDto(e, e.Livro?.Titulo, e.Usuario?.Nome));
     }
 
-    public async Task<EmprestimoDto?> GetByIdAsync(string id)
+    public async Task<EmprestimoDto?> GetByIdAsync(int id)
     {
         _logger.LogInformation("Buscando empréstimo com ID: {Id}", id);
         var emprestimo = await _emprestimoRepository.GetByIdAsync(id);
@@ -48,10 +39,7 @@ public class EmprestimoService : IEmprestimoService
         if (emprestimo == null)
             return null;
 
-        var livro = await _livroRepository.GetByIdAsync(emprestimo.LivroId);
-        var usuario = await _usuarioRepository.GetByIdAsync(emprestimo.UsuarioId);
-        
-        return MapToDto(emprestimo, livro?.Titulo, usuario?.Nome);
+        return MapToDto(emprestimo, emprestimo.Livro?.Titulo, emprestimo.Usuario?.Nome);
     }
 
     public async Task<EmprestimoDto> CreateAsync(CreateEmprestimoDto createEmprestimoDto)
@@ -97,7 +85,7 @@ public class EmprestimoService : IEmprestimoService
         return MapToDto(createdEmprestimo, livro.Titulo, usuario.Nome);
     }
 
-    public async Task<EmprestimoDto?> DevolverAsync(string id, DevolverEmprestimoDto devolverEmprestimoDto)
+    public async Task<EmprestimoDto?> DevolverAsync(int id, DevolverEmprestimoDto devolverEmprestimoDto)
     {
         _logger.LogInformation("Devolvendo empréstimo com ID: {Id}", id);
         
@@ -138,7 +126,7 @@ public class EmprestimoService : IEmprestimoService
         return MapToDto(updatedEmprestimo, livro?.Titulo, usuario?.Nome);
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
         _logger.LogInformation("Deletando empréstimo com ID: {Id}", id);
         

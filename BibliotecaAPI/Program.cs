@@ -1,25 +1,13 @@
-﻿using BibliotecaAPI.Repositories;
+﻿// [Program.cs]
+using BibliotecaAPI.Repositories;
 using BibliotecaAPI.Services;
-using BibliotecaAPI.Settings;
-using MongoDB.Driver;
+using BibliotecaAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<MongoSettings>(
-    builder.Configuration.GetSection("MongoSettings"));
-
-builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
-{
-    var settings = builder.Configuration.GetSection("MongoSettings").Get<MongoSettings>();
-    return new MongoClient(settings?.ConnectionString);
-});
-
-builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
-{
-    var client = serviceProvider.GetRequiredService<IMongoClient>();
-    var settings = builder.Configuration.GetSection("MongoSettings").Get<MongoSettings>();
-    return client.GetDatabase(settings?.DatabaseName);
-});
+builder.Services.AddDbContext<BibliotecaDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();

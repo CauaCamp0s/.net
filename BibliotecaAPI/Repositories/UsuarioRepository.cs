@@ -1,48 +1,61 @@
+// [Repositories/UsuarioRepository.cs]
 using BibliotecaAPI.Models;
-using MongoDB.Driver;
+using BibliotecaAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaAPI.Repositories;
 
 public class UsuarioRepository : IUsuarioRepository
 {
-    private readonly IMongoCollection<Usuario> _usuarios;
+    private readonly BibliotecaDbContext _context;
 
-    public UsuarioRepository(IMongoDatabase database)
+    public UsuarioRepository(BibliotecaDbContext context)
     {
-        _usuarios = database.GetCollection<Usuario>("usuarios");
+        _context = context;
     }
 
     public async Task<IEnumerable<Usuario>> GetAllAsync()
     {
-        return await _usuarios.Find(_ => true).ToListAsync();
+        return await _context.Usuarios.ToListAsync();
     }
 
-    public async Task<Usuario?> GetByIdAsync(string id)
+    public async Task<Usuario?> GetByIdAsync(int id)
     {
-        return await _usuarios.Find(u => u.Id == id).FirstOrDefaultAsync();
+        return await _context.Usuarios.FindAsync(id);
     }
 
     public async Task<Usuario> CreateAsync(Usuario usuario)
     {
-        await _usuarios.InsertOneAsync(usuario);
+        _context.Usuarios.Add(usuario);
+        await _context.SaveChangesAsync();
         return usuario;
     }
 
-    public async Task<Usuario?> UpdateAsync(string id, Usuario usuario)
+    public async Task<Usuario?> UpdateAsync(int id, Usuario usuario)
     {
-        var result = await _usuarios.ReplaceOneAsync(u => u.Id == id, usuario);
-        return result.IsAcknowledged ? usuario : null;
+        var existingUsuario = await _context.Usuarios.FindAsync(id);
+        if (existingUsuario == null) return null;
+
+        existingUsuario.Nome = usuario.Nome;
+        existingUsuario.Email = usuario.Email;
+        existingUsuario.Telefone = usuario.Telefone;
+
+        await _context.SaveChangesAsync();
+        return existingUsuario;
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var result = await _usuarios.DeleteOneAsync(u => u.Id == id);
-        return result.IsAcknowledged && result.DeletedCount > 0;
+        var usuario = await _context.Usuarios.FindAsync(id);
+        if (usuario == null) return false;
+
+        _context.Usuarios.Remove(usuario);
+        await _context.SaveChangesAsync();
+        return true;
     }
 
-    public async Task<bool> ExistsAsync(string id)
+    public async Task<bool> ExistsAsync(int id)
     {
-        var count = await _usuarios.CountDocumentsAsync(u => u.Id == id);
-        return count > 0;
+        return await _context.Usuarios.AnyAsync(u => u.Id == id);
     }
 }
