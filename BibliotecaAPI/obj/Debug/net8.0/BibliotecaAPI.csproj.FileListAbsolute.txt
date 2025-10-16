@@ -31,7 +31,6 @@ C:\dev\.net\BibliotecaAPI\obj\Debug\net8.0\staticwebassets\msbuild.buildTransiti
 C:\dev\.net\BibliotecaAPI\obj\Debug\net8.0\staticwebassets.pack.json
 C:\dev\.net\BibliotecaAPI\obj\Debug\net8.0\scopedcss\bundle\BibliotecaAPI.styles.css
 C:\dev\.net\BibliotecaAPI\obj\Debug\net8.0\BibliotecaAPI.csproj.CopyComplete
-C:\dev\.net\BibliotecaAPI\bin\Debug\net8.0\insomnia-biblioteca-api.json
 C:\dev\.net\BibliotecaAPI\obj\Debug\net8.0\BibliotecaAPI.sourcelink.json
 C:\dev\.net\BibliotecaAPI\bin\Debug\net8.0\Humanizer.dll
 C:\dev\.net\BibliotecaAPI\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll

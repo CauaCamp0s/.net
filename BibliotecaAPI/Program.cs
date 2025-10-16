@@ -1,13 +1,24 @@
-﻿// [Program.cs]
-using BibliotecaAPI.Repositories;
+﻿using BibliotecaAPI.Repositories;
 using BibliotecaAPI.Services;
 using BibliotecaAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+{
+    var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+    var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "biblioteca";
+    var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
+    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "password";
+    var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+    
+    connectionString = $"Host={dbHost};Database={dbName};Username={dbUser};Password={dbPassword};Port={dbPort};SSL Mode=Require;Trust Server Certificate=true";
+}
+
 builder.Services.AddDbContext<BibliotecaDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
