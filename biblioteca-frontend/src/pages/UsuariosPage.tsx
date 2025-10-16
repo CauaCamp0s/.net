@@ -97,24 +97,35 @@ export default function UsuariosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900">Usuários</h2>
-          <p className="text-gray-600">Gerencie os usuários da biblioteca</p>
+    <div className="space-y-8 animate-slide-up">
+      {/* Header com gradiente */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 rounded-2xl"></div>
+        <div className="relative p-8">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-4xl font-bold gradient-text mb-2 flex items-center">
+                <span className="mr-3">👥</span>
+                Usuários
+              </h2>
+              <p className="text-slate-600 text-lg">Gerencie os usuários da biblioteca com elegância</p>
+            </div>
+            <Button 
+              onClick={() => setShowForm(true)} 
+              className="button-primary flex items-center space-x-2 shadow-glow"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Novo Usuário</span>
+            </Button>
+          </div>
         </div>
-        <Button onClick={() => setShowForm(true)} className="flex items-center">
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Usuário
-        </Button>
       </div>
 
       {/* Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Search className="h-5 w-5 mr-2" />
+          <CardTitle className="flex items-center text-slate-700">
+            <Search className="h-5 w-5 mr-3 text-primary-600" />
             Buscar Usuários
           </CardTitle>
         </CardHeader>
@@ -184,21 +195,21 @@ export default function UsuariosPage() {
           <CardTitle>Lista de Usuários ({filteredUsuarios.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <Table className="w-full table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Telefone</TableHead>
-                <TableHead>Ações</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-1/3">Nome</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-1/3">Email</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-1/4">Telefone</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-24">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredUsuarios.map((usuario) => (
                 <TableRow key={usuario.id}>
-                  <TableCell className="font-medium">{usuario.nome}</TableCell>
-                  <TableCell>{usuario.email}</TableCell>
-                  <TableCell>{usuario.telefone}</TableCell>
+                  <TableCell className="font-medium text-slate-800 truncate" title={usuario.nome}>{usuario.nome}</TableCell>
+                  <TableCell className="text-slate-600 truncate" title={usuario.email}>{usuario.email}</TableCell>
+                  <TableCell className="text-slate-600">{usuario.telefone}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
                       <Button

@@ -129,24 +129,35 @@ export default function EmprestimosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900">Empréstimos</h2>
-          <p className="text-gray-600">Gerencie os empréstimos da biblioteca</p>
+    <div className="space-y-8 animate-slide-up">
+      {/* Header com gradiente */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-rose-500/10 rounded-2xl"></div>
+        <div className="relative p-8">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-4xl font-bold gradient-text mb-2 flex items-center">
+                <span className="mr-3">📅</span>
+                Empréstimos
+              </h2>
+              <p className="text-slate-600 text-lg">Gerencie os empréstimos da biblioteca com elegância</p>
+            </div>
+            <Button 
+              onClick={() => setShowForm(true)} 
+              className="button-primary flex items-center space-x-2 shadow-glow"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Novo Empréstimo</span>
+            </Button>
+          </div>
         </div>
-        <Button onClick={() => setShowForm(true)} className="flex items-center">
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Empréstimo
-        </Button>
       </div>
 
       {/* Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Search className="h-5 w-5 mr-2" />
+          <CardTitle className="flex items-center text-slate-700">
+            <Search className="h-5 w-5 mr-3 text-primary-600" />
             Buscar Empréstimos
           </CardTitle>
         </CardHeader>
@@ -232,24 +243,24 @@ export default function EmprestimosPage() {
           <CardTitle>Lista de Empréstimos ({filteredEmprestimos.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <Table className="w-full table-fixed">
             <TableHeader>
               <TableRow>
-                <TableHead>Livro</TableHead>
-                <TableHead>Usuário</TableHead>
-                <TableHead>Data Empréstimo</TableHead>
-                <TableHead>Data Devolução</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Ações</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-1/5">Livro</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-1/5">Usuário</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-24">Data Empréstimo</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-24">Data Devolução</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-24">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 w-24">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredEmprestimos.map((emprestimo) => (
                 <TableRow key={emprestimo.id}>
-                  <TableCell className="font-medium">{getLivroNome(emprestimo.livroId)}</TableCell>
-                  <TableCell>{getUsuarioNome(emprestimo.usuarioId)}</TableCell>
-                  <TableCell>{new Date(emprestimo.dataEmprestimo).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(emprestimo.dataDevolucao).toLocaleDateString()}</TableCell>
+                  <TableCell className="font-medium text-slate-800 truncate" title={getLivroNome(emprestimo.livroId)}>{getLivroNome(emprestimo.livroId)}</TableCell>
+                  <TableCell className="text-slate-600 truncate" title={getUsuarioNome(emprestimo.usuarioId)}>{getUsuarioNome(emprestimo.usuarioId)}</TableCell>
+                  <TableCell className="text-slate-600 text-center">{new Date(emprestimo.dataEmprestimo).toLocaleDateString()}</TableCell>
+                  <TableCell className="text-slate-600 text-center">{new Date(emprestimo.dataDevolucao).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       emprestimo.devolvido 
